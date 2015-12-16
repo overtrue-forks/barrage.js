@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.barrage-container {
+  width: 600px;
+  height: 400px;
+  background: #CCC;
+  margin: 20px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.barrage-container .barrage-subtitle {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 20px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+

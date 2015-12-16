@@ -1,0 +1,23 @@
+{
+  "name": "barrage.js",
+  "version": "1.0.0",
+  "description": "Barrage for JavaScript",
+  "main": "src/barrage.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-artisan/barrage.js.git"
+  },
+  "keywords": [
+    "Barrage",
+    "barrage"
+  ],
+  "author": "artisan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/code-artisan/barrage.js/issues"
+  },
+  "homepage": "https://github.com/code-artisan/barrage.js#readme"
+}
