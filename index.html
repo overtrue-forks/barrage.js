@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Barrage for JavaScript.</title>
+  <link rel="stylesheet" href="src/stylesheet/barrage.css" />
+</head>
+<body>
+
+<div class="barrage-container"></div>
+
+<script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="src/javascript/subtitle.js"></script>
+<script src="src/javascript/barrage.js"></script>
+<script>
+$(function () {
+  var CONFIG = {
+    subtitle: [
+      '食屎吧你',
+      '脾气好不是没脾气',
+      '蛋蛋的忧伤',
+      '去你妹的',
+      '你胸大你先说',
+      '你胸小别说话',
+      '弹鸡鸡500下',
+      '弹鸡鸡弹到死！！！'
+    ],
+    color: ['red', 'blue', 'green', 'purple', 'yellow', 'grey'],
+    container: '.barrage-container'
+  };
+
+  window.barrage = new Barrage(CONFIG);
+});
+</script>
+</body>
+</html>
