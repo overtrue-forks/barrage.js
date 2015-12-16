@@ -55,7 +55,7 @@ function BarragePlayground (options) {
 };
 
 BarragePlayground.prototype.start = function () {
-  var $barrage = this.$container.find('.barrage-barrage'),
+  var $barrage = this.$container.find('.barrage-builder'),
       $element = null, config;
 
   $barrage.each(function (index, element) {
