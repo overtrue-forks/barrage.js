@@ -58,7 +58,7 @@ BarragePlayground.prototype.start = function () {
   var $barrage = this.$container.find('.barrage-builder'),
       $element = null, config;
 
-  $barrage.each(function (index, element) {
+  $barrage.stop().each(function (index, element) {
     $element = $(element);
 
     // Get cache object.
@@ -66,7 +66,8 @@ BarragePlayground.prototype.start = function () {
 
     $element.animate({
       left: config.backup.point
-    }, config.backup.time, 'linear');
+    }, config.backup.time, 'linear',
+      config.backup.destroy);
   });
 };
 
