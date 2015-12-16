@@ -8,8 +8,12 @@
 var Barrage = function (options) {
   var defaults = {
     loop: true,
+    time: {
+      min: 5000,
+      max: 10000
+    },
     subtitle: [],         // Subtitle
-    maxLength: 5,      // Max length
+    maxLength: 5,         // Max length
     color: [],            // Color
     theme: 'default',     // Theme
     container: null       // Container
@@ -45,7 +49,14 @@ var Barrage = function (options) {
    */
   this.$container = $(this.options.container);
 
+  this.store = [];
+
+  this.event();
   this._runner();
+};
+
+Barrage.prototype.event = function () {
+  this.$container.on('barrage:shift', this._shift.apply(this));
 };
 
 Barrage.prototype.start = function () {
@@ -60,9 +71,15 @@ Barrage.prototype.start = function () {
 
     $element.animate({
       left: config.backup.point
-    }, config.backup.time,
-      'linear', config.destroy);
+    }, config.backup.time, 'linear');
   });
+};
+
+Barrage.prototype._shift = function () {
+  var that = this;
+  return function () {
+    that.store.shift();
+  };
 };
 
 Barrage.prototype.pause = function () {
@@ -70,6 +87,7 @@ Barrage.prototype.pause = function () {
 };
 
 Barrage.prototype._runner = function () {
+
   this.summary--;
 
   // Is loop mode.
@@ -84,12 +102,15 @@ Barrage.prototype._runner = function () {
     return false;
   }
 
+  this.$container.trigger('barrage:shift');
+
   var subtitle = null, i = 0, config,
       options = this.options,
 
       // Mapping variable from options.
       maxLength = options.maxLength,
       color = options.color,
+      time = options.time,
 
       /// Cache container height.
       $height = this.$container.height(),
@@ -109,10 +130,10 @@ Barrage.prototype._runner = function () {
     config = {
       subtitle: subtitle,
       color: color[this.random(0, color.length - 1)],
-      time: this.random(5000, 10000),
+      time: this.random(time.min, time.max),
       container: this.$container,
       fontSize: this.random(14, 20),
-      top: this.random($height / 2, 20),
+      top: this.unique($height / 2, 15),
       callback: this._runner
     };
 
@@ -127,9 +148,52 @@ Barrage.prototype.random = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-Barrage.prototype.unique = function () {
-  var millisecond = new Date().getTime() + '';
-  return parseInt(millisecond.split('').reverse().splice(0, 2).join(''));
+Barrage.prototype._hasNear = function (store, refer, offset) {
+  var position = -1,
+      result = null;
+
+  if ($.isArray(store)) {
+    $.each(store, function (index, item) {
+      result = Math.abs(item - refer);
+
+      if (result <= offset) {
+        position = index;
+        return false;
+      }
+    });
+  }
+
+  return position;
+};
+
+/**
+ * Generate a unique.
+ * @param  {Number} min min.
+ * @param  {Number} max max.
+ * @return {[type]}     [description]
+ */
+Barrage.prototype.unique = function (min, max) {
+  var maxLength = this.options.maxLength,
+      random    = 0,
+      hasNear   = -1;
+
+  if ($.isNumeric(maxLength)) {
+    if (this.store.length === maxLength) {
+      return random;
+    }
+
+    random = this.random(min, max);
+    hasNear = this._hasNear(this.store, random, 20);
+
+    if (hasNear !== -1) {
+      return this.unique(min, max);
+    }
+
+    this.store.push(random);
+    return random;
+  }
+
+  return random;
 };
 
 Barrage.prototype.destroy = function() {
