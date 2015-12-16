@@ -71,7 +71,7 @@ BarragePlayground.prototype.start = function () {
 };
 
 BarragePlayground.prototype.pause = function () {
-  return this.$container.find('.barrage-item').stop();
+  return this.$container.find('.barrage-builder').stop();
 };
 
 BarragePlayground.prototype._runner = function () {
