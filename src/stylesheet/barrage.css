@@ -14,12 +14,9 @@ body {
 
 .barrage-container .barrage-subtitle {
   position: absolute;
-  left: 0px;
   top: 0px;
   height: 20px;
   line-height: 20px;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  display: inline-block;
 }
 
