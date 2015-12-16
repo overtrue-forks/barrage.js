@@ -5,14 +5,14 @@
  * @Date(2015-12-15)
  */
 
-var Barrage = function (options) {
+function BarragePlayground (options) {
   var defaults = {
-    loop: true,
+    loop: false,
     time: {
       min: 5000,
       max: 10000
     },
-    subtitle: [],         // Subtitle
+    barrage: [],         // barrage
     maxLength: 5,         // Max length
     color: [],            // Color
     theme: 'default',     // Theme
@@ -22,19 +22,19 @@ var Barrage = function (options) {
   this.options = $.extend({}, defaults, options);
 
   /**
-   * Mapping subtitle.
+   * Mapping barrage.
    *
    * @type {Array}
    */
-  this.subtitle = this.options.subtitle;
+  this.barrage = this.options.barrage;
 
 
   /**
-   * Backup subtitle.
+   * Backup barrage.
    * 
    * @type {Array}
    */
-  this.backup = $.extend(true, [], this.options.subtitle);
+  this.backup = $.extend(true, [], this.options.barrage);
 
   /**
    * Define summary.
@@ -50,20 +50,15 @@ var Barrage = function (options) {
   this.$container = $(this.options.container);
 
   this.store = [];
-
-  this.event();
+  
   this._runner();
 };
 
-Barrage.prototype.event = function () {
-  this.$container.on('barrage:shift', this._shift.apply(this));
-};
-
-Barrage.prototype.start = function () {
-  var $subtitle = this.$container.find('.barrage-subtitle'),
+BarragePlayground.prototype.start = function () {
+  var $barrage = this.$container.find('.barrage-barrage'),
       $element = null, config;
 
-  $subtitle.each(function (index, element) {
+  $barrage.each(function (index, element) {
     $element = $(element);
 
     // Get cache object.
@@ -75,36 +70,29 @@ Barrage.prototype.start = function () {
   });
 };
 
-Barrage.prototype._shift = function () {
-  var that = this;
-  return function () {
-    that.store.shift();
-  };
+BarragePlayground.prototype.pause = function () {
+  return this.$container.find('.barrage-item').stop();
 };
 
-Barrage.prototype.pause = function () {
-  return this.$container.find('.barrage-subtitle').stop();
-};
-
-Barrage.prototype._runner = function () {
+BarragePlayground.prototype._runner = function () {
 
   this.summary--;
 
   // Is loop mode.
   if (this.options.loop) {
-    if (this.subtitle.length === 0) {
-      // Copy subtitle.
-      this.subtitle = $.extend(true, [], this.backup);
+    if (this.barrage.length === 0) {
+      // Copy barrage.
+      this.barrage = $.extend(true, [], this.backup);
     }
   }
 
-  if (this.subtitle.length === 0) {
+  if (this.barrage.length === 0) {
     return false;
   }
 
-  this.$container.trigger('barrage:shift');
+  this.store.shift();
 
-  var subtitle = null, i = 0, config,
+  var barrage = null, i = 0, config,
       options = this.options,
 
       // Mapping variable from options.
@@ -115,11 +103,11 @@ Barrage.prototype._runner = function () {
       /// Cache container height.
       $height = this.$container.height(),
       
-      // Increment. splice the subtitle.
+      // Increment. splice the barrage.
       increment = 0;
 
   for (; i < maxLength; i++) {
-    subtitle = this.subtitle[ i ];
+    barrage = this.barrage[ i ];
 
     if (this.summary >= maxLength) {
       continue; // Can not append child any more.
@@ -128,7 +116,7 @@ Barrage.prototype._runner = function () {
     increment++;
 
     config = {
-      subtitle: subtitle,
+      barrage: barrage,
       color: color[this.random(0, color.length - 1)],
       time: this.random(time.min, time.max),
       container: this.$container,
@@ -137,18 +125,33 @@ Barrage.prototype._runner = function () {
       callback: this._runner
     };
 
-    new Subtitle(config, this);
+    new BarrageBuilder(config, this);
     this.summary++;
   }
 
-  this.subtitle.splice(0, increment);
+  this.barrage.splice(0, increment);
 };
 
-Barrage.prototype.random = function (min, max) {
+/**
+ * Random a number by given range.
+ * 
+ * @param  {Number} min min.
+ * @param  {Number} max max.
+ * @return {Number}     random.
+ */
+BarragePlayground.prototype.random = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-Barrage.prototype._hasNear = function (store, refer, offset) {
+/**
+ * Search nearly number from store.
+ * 
+ * @param  {Array}    store   store.
+ * @param  {Number}   refer   refer.
+ * @param  {Number}   offset  offset.
+ * @return {Number}           index.
+ */
+BarragePlayground.prototype._hasNear = function (store, refer, offset) {
   var position = -1,
       result = null;
 
@@ -168,11 +171,12 @@ Barrage.prototype._hasNear = function (store, refer, offset) {
 
 /**
  * Generate a unique.
+ * 
  * @param  {Number} min min.
  * @param  {Number} max max.
- * @return {[type]}     [description]
+ * @return {Number}     random.
  */
-Barrage.prototype.unique = function (min, max) {
+BarragePlayground.prototype.unique = function (min, max) {
   var maxLength = this.options.maxLength,
       random    = 0,
       hasNear   = -1;
@@ -196,7 +200,7 @@ Barrage.prototype.unique = function (min, max) {
   return random;
 };
 
-Barrage.prototype.destroy = function() {
+BarragePlayground.prototype.destroy = function() {
   this.options = null;
   this.summary = null;
   this.$container = null;

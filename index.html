@@ -10,15 +10,16 @@
 <div class="barrage-container"></div>
 
 <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-<script src="src/javascript/subtitle.js"></script>
-<script src="src/javascript/barrage.js"></script>
+<script src="src/javascript/barrage-builder.js"></script>
+<script src="src/javascript/barrage-playground.js"></script>
 <script>
 $(function () {
   var CONFIG = {
-    subtitle: [
-      '食屎吧你',
+    barrage: [
+      '<span style="color: red; font-weight: bold;">菊花残</span>',
       '脾气好不是没脾气',
       '蛋蛋的忧伤',
+      '安总木有小鸡鸡',
       '去你妹的',
       '你胸大你先说',
       '你胸小别说话',
@@ -29,7 +30,7 @@ $(function () {
     container: '.barrage-container'
   };
 
-  window.barrage = new Barrage(CONFIG);
+  window.barrage = new BarragePlayground(CONFIG);
 });
 </script>
 </body>

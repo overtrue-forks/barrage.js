@@ -12,7 +12,7 @@ body {
   overflow: hidden;
 }
 
-.barrage-container .barrage-subtitle {
+.barrage-container .barrage-builder {
   position: absolute;
   top: 0px;
   height: 20px;
