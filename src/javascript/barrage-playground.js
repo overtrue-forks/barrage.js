@@ -66,7 +66,8 @@ BarragePlayground.prototype.start = function () {
 
     $element.animate({
       left: config.backup.point
-    }, config.backup.time, 'linear');
+    }, config.backup.time, 'linear',
+      config.backup.destroy);
   });
 };
 

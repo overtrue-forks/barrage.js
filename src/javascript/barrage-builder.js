@@ -72,13 +72,14 @@ BarrageBuilder.prototype.animation = function (point, time) {
 
   // Bind context.
   onFinish = onFinish.apply(this);
-  
+
   this.element.animate({
         left: point
       }, time, 'linear', onFinish)
       .data('backup', {
         time: time,
-        point: point
+        point: point,
+        destroy: onFinish
       });
 };
 
