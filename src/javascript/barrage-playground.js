@@ -12,10 +12,9 @@ function BarragePlayground (options) {
       min: 5000,
       max: 10000
     },
-    barrage: [],         // barrage
+    barrage: [],          // barrage
     maxLength: 5,         // Max length
     color: [],            // Color
-    theme: 'default',     // Theme
     container: null       // Container
   };
 
@@ -45,6 +44,7 @@ function BarragePlayground (options) {
 
   /**
    * Barrage container.
+   * 
    * @type {Object}
    */
   this.$container = $(this.options.container);
@@ -54,25 +54,61 @@ function BarragePlayground (options) {
   this._runner();
 };
 
+/**
+ * Start animate.
+ * 
+ * @return {Undefined}
+ */
 BarragePlayground.prototype.start = function () {
   var $barrage = this.$container.find('.barrage-builder'),
-      $element = null, config;
+      $element = null, config = {}, surplus = 0;
 
   $barrage.stop().each(function (index, element) {
     $element = $(element);
 
     // Get cache object.
-    config = $element.data();
+    config = $element.data('config');
+    surplus = $element.data('surplus');
+
+    surplus = surplus ? surplus : config.time;
 
     $element.animate({
-      left: config.backup.point
-    }, config.backup.time, 'linear',
-      config.backup.destroy);
+      left: config.point
+    }, surplus, 'linear',
+      config.destroy);
   });
 };
 
+/**
+ * Stop builder element animate.
+ * 
+ * @return {Undefined}
+ */
 BarragePlayground.prototype.pause = function () {
-  return this.$container.find('.barrage-builder').stop();
+  var $elements = this.$container.find('.barrage-builder'),
+      $element = null, surplus = null, startTime = null,
+      millisecond = new Date().getTime(),
+      config = {};
+
+  $elements.each(function (index, element) {
+    $element = $(element);
+    now = new Date().getTime();
+    config = $element.data('config');
+
+    surplus =  config.time - (millisecond - config.startTime);
+
+    $element.data('surplus', surplus).stop();
+  });
+};
+
+/**
+ * Insert some barrage to store.
+ * 
+ * @param  {Array} barrage Barrage.
+ * @return {Array}         Inserted barrage.
+ */
+BarragePlayground.prototype.insert = function (barrage) {
+  return this.barrage = this.barrage.concat(barrage);
 };
 
 BarragePlayground.prototype._runner = function () {

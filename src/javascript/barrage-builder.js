@@ -7,7 +7,6 @@
 
 function BarrageBuilder(options, context) {
   var defaults = {
-    max: 50,
     top: 0,
     fontSize: 14,
     color: '#333',
@@ -76,7 +75,8 @@ BarrageBuilder.prototype.animation = function (point, time) {
   this.element.animate({
         left: point
       }, time, 'linear', onFinish)
-      .data('backup', {
+      .data('config', {
+        startTime: new Date().getTime(),
         time: time,
         point: point,
         destroy: onFinish
