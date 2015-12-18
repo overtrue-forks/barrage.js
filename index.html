@@ -3,19 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <title>Barrage for JavaScript.</title>
-  <link rel="stylesheet" href="src/stylesheet/barrage.css" />
+  <style>
+    * {margin:0;padding:0}
+    body {
+      font-family: 'Pingfang SC', 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', "微软雅黑", STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+    }
+
+    .wrapper {
+      width: 800px;
+      margin:20px auto;
+    }
+
+    .barrage-container {
+      height: 500px;
+      background: #eee;
+      overflow-x: hidden;
+      position: relative;
+    }
+    .barrage-item {
+      z-index:999999999;
+      line-height: 20px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      border-radius: 20px;
+      padding: 5px 10px;
+    }
+    .controls {
+      margin-top:20px;
+    }
+    button {
+      border:1px solid #00a9f4;
+      background: #03a9f4;
+      padding: 10px 20px;
+      color: #fff;
+      cursor: pointer;
+    }
+    button[disabled="disabled"] {
+      background: #ccc;
+      color: #444;
+      border:1px solid #bbb;
+    }
+    #form {
+      display: inline-block;
+    }
+    .form-control {
+      width: 300px;
+      height: 32px;
+      padding: 2px 5px;
+    }
+  </style>
 </head>
 <body>
-
-<div class="barrage-container"></div>
-
+<div class="wrapper">
+  <div class="barrage-container"></div>
+  <div class="controls">
+    <button id="switch-status">pause</button>
+    <button id="destroy">destroy</button>
+    <form action="" id="form">
+      <input type="text" class="form-control" name="item">
+      <button>send</button>
+    </form>
+  </div>
+</div>
 <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-<script src="src/javascript/barrage-builder.js"></script>
-<script src="src/javascript/barrage-playground.js"></script>
+<script src="src/barrage.js"></script>
 <script>
 $(function () {
-  var CONFIG = {
-    barrage: [
+  var config = {
+    loop:true,
+    barrages: [
       '<span style="color: red; font-weight: bold;">You love me or not?</span>',
       'Hello world...',
       'What are you doing here???',
@@ -26,11 +83,42 @@ $(function () {
       'Single dog!!!',
       'Go die~~ O(∩_∩)O~~'
     ],
-    color: ['red', 'blue', 'green', 'purple', 'yellow', 'grey'],
+    colors: ['red', 'blue', 'green', 'purple', 'yellow', 'grey'],
     container: '.barrage-container'
   };
 
-  window.barrage = new BarragePlayground(CONFIG);
+  var $barrage = $('.barrage-container').barrage(config);
+
+  $('#switch-status').on('click', function(){
+    if ($(this).text() == 'START') {
+      $barrage.start();
+      $(this).text('PAUSE');
+    } else {
+      $barrage.pause();
+      $(this).text('START');
+    }
+  });
+
+  $('#destroy').on('click', function(){
+    if ($(this).attr('disabled')) { return false; };
+    if ($(this).text() == 'destroy') {
+      $barrage.destroy();
+      $(this).text('rebuild');
+      $('#switch-status').attr('disabled', true);
+    } else {
+      $barrage = $('.barrage-container').barrage(config);
+      $(this).text('destroy');
+      $('#switch-status').attr('disabled', false);
+    }
+  });
+
+  $('#form').on('submit', function(event){
+    event.preventDefault();
+    if ($('[name="item"]').val().length) {
+      $barrage.insert($('[name="item"]').val());
+      $('[name="item"]').val('');
+    };
+  });
 });
 </script>
 </body>
