@@ -132,6 +132,8 @@
 
     this.summary--;
 
+    if (!this.options) {return;};
+
     // Is loop mode.
     if (this.options.loop) {
       if (this.barrages.length === 0) {
@@ -364,8 +366,8 @@
    */
   BarrageBuilder.prototype.destroy = function () {
     this.element.remove();
-    this.element = null;
-    this.options = null;
+    this.element    = null;
+    this.options    = null;
     this.$container = null;
   };
 
